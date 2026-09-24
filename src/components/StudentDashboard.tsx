@@ -19,7 +19,8 @@ import {
   ShieldAlert,
   HelpCircle,
   Database,
-  X
+  X,
+  Target
 } from 'lucide-react';
 
 interface StudentDashboardProps {
@@ -79,6 +80,24 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     rankIcon = '🚀';
   }
   const progressPercent = Math.min(100, Math.round((currentXp / nextRankXp) * 100));
+
+  // Curriculum levels and stages completion statistics
+  const totalLevels = CURRICULUM_LEVELS.length;
+  const totalStages = CURRICULUM_LEVELS.reduce((acc, lvl) => acc + lvl.stages.length, 0);
+  let totalCompletedStages = 0;
+  let totalCompletedLevels = 0;
+
+  CURRICULUM_LEVELS.forEach(lvl => {
+    const isLevelAllDone = lvl.stages.length > 0 && lvl.stages.every(st => user.completedStages?.[`${lvl.id}-${st.id}`]);
+    if (isLevelAllDone) totalCompletedLevels++;
+    lvl.stages.forEach(st => {
+      if (user.completedStages?.[`${lvl.id}-${st.id}`]) {
+        totalCompletedStages++;
+      }
+    });
+  });
+
+  const overallProgressPercent = totalStages > 0 ? Math.min(100, Math.round((totalCompletedStages / totalStages) * 100)) : 0;
 
   // =========================================================================
   // CASE 1: SISWA BERSTATUS PENDING
@@ -326,6 +345,78 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             </button>
           </div>
 
+          {/* Master Overall Adventure Progress Bar Card */}
+          <div className="bg-white rounded-3xl p-5 sm:p-6 border-2 border-amber-200/90 shadow-sm relative overflow-hidden">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 text-white flex items-center justify-center text-2xl shadow-md shrink-0">
+                  🎯
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base sm:text-lg font-black font-heading text-slate-800">
+                      Total Capaian Misi Petualangan
+                    </h3>
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-black border border-amber-200">
+                      {overallProgressPercent}% Selesai
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 font-bold mt-0.5">
+                    {totalCompletedStages} dari {totalStages} Stage Selesai • {totalCompletedLevels} dari {totalLevels} Level Tuntas
+                  </p>
+                </div>
+              </div>
+
+              {/* Milestones Level Badges */}
+              <div className="flex items-center gap-1.5 sm:gap-2 self-start md:self-auto overflow-x-auto pb-1 md:pb-0">
+                {CURRICULUM_LEVELS.map(lvl => {
+                  const isLvlDone = lvl.stages.every(st => user.completedStages?.[`${lvl.id}-${st.id}`]);
+                  const stCount = lvl.stages.filter(st => user.completedStages?.[`${lvl.id}-${st.id}`]).length;
+                  return (
+                    <div 
+                      key={lvl.id}
+                      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-xs font-black transition-all ${
+                        isLvlDone 
+                          ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-2xs' 
+                          : stCount > 0 
+                            ? 'bg-amber-50 border-amber-300 text-amber-800' 
+                            : 'bg-slate-50 border-slate-200 text-slate-400'
+                      }`}
+                      title={`Level ${lvl.id}: ${stCount}/${lvl.stages.length} Stage Selesai`}
+                    >
+                      <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                        isLvlDone ? 'bg-emerald-500 text-white' : 'bg-white border border-current'
+                      }`}>
+                        {isLvlDone ? '✓' : lvl.id}
+                      </span>
+                      <span className="hidden sm:inline">Lvl {lvl.id}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Master Progress Bar Track */}
+            <div className="space-y-1.5">
+              <div className="w-full bg-slate-100 h-4 sm:h-5 rounded-full overflow-hidden p-1 border border-slate-200 shadow-inner">
+                <div 
+                  className="bg-gradient-to-r from-amber-400 via-orange-500 to-emerald-500 h-full rounded-full transition-all duration-700 ease-out shadow-sm"
+                  style={{ width: `${Math.max(overallProgressPercent > 0 ? 3 : 0, overallProgressPercent)}%` }}
+                />
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 px-1">
+                <span>Titik Awal (0%)</span>
+                <span className="text-amber-700 font-black">
+                  {overallProgressPercent === 100 
+                    ? '🎉 Luar Biasa! Semua Level Petualangan Telah Kamu Selesaikan!' 
+                    : `Tersisa ${totalStages - totalCompletedStages} stage lagi menuju kelulusan penuh!`}
+                </span>
+                <span>Master Koding (100%)</span>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {CURRICULUM_LEVELS.map(lvl => {
               const s1Done = user.completedStages?.[`${lvl.id}-1`];
@@ -333,6 +424,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               const s3Done = user.completedStages?.[`${lvl.id}-3`];
               const completedCount = [s1Done, s2Done, s3Done].filter(Boolean).length;
               const allDone = completedCount === 3;
+              const levelPercent = Math.round((completedCount / lvl.stages.length) * 100);
               const cert = user.certificates?.find(c => c.levelNumber === lvl.id);
 
               return (
@@ -342,7 +434,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 >
                   <div>
                     {/* Level Card Header */}
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-3">
                       <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${lvl.color} text-white flex items-center justify-center font-black text-xl shadow-md`}>
                         {lvl.id}
                       </div>
@@ -359,6 +451,51 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       Level {lvl.id}: {lvl.title}
                     </h3>
                     <p className="text-xs font-bold text-slate-500 mt-0.5">{lvl.subtitle}</p>
+
+                    {/* Progress Bar Component for this Level */}
+                    <div className="mt-3.5 p-3 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-black text-slate-600 uppercase tracking-wide text-[10px] flex items-center gap-1.5">
+                          <Target className="w-3.5 h-3.5 text-slate-400" />
+                          Progres Level:
+                        </span>
+                        <span className={`font-black text-xs ${
+                          allDone ? 'text-emerald-600' : completedCount > 0 ? 'text-amber-600' : 'text-slate-400'
+                        }`}>
+                          {levelPercent}% ({completedCount}/{lvl.stages.length} Stage)
+                        </span>
+                      </div>
+
+                      {/* Progress Bar Track */}
+                      <div className="w-full bg-slate-200/80 h-2.5 rounded-full overflow-hidden p-0.5">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            allDone 
+                              ? 'bg-gradient-to-r from-emerald-400 to-teal-500' 
+                              : `bg-gradient-to-r ${lvl.color}`
+                          }`}
+                          style={{ width: `${levelPercent}%` }}
+                        />
+                      </div>
+
+                      {/* Stage Mini Dots Indicator */}
+                      <div className="grid grid-cols-3 gap-1.5 pt-0.5">
+                        {lvl.stages.map((st, sIdx) => {
+                          const isDone = user.completedStages?.[`${lvl.id}-${st.id}`];
+                          return (
+                            <div 
+                              key={st.id}
+                              className={`h-1.5 rounded-full transition-colors ${
+                                isDone 
+                                  ? 'bg-emerald-500' 
+                                  : 'bg-slate-200'
+                              }`}
+                              title={`Stage ${sIdx + 1}: ${isDone ? 'Selesai' : 'Belum Selesai'}`}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
 
                     {/* Stages List */}
                     <div className="mt-4 space-y-2">
