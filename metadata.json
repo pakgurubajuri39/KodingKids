@@ -1,0 +1,6 @@
+{
+  "name": "KodingKids - Petualangan Coding Interaktif Anak",
+  "description": "Aplikasi web belajar coding interaktif khusus anak-anak dengan gamifikasi, 5 level seru, mode unplugged, dan sertifikat digital.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

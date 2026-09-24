@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Siswa - KodingKids</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="logo">
+        <span>🤖</span>
+        <span>KODING<span style="color:var(--primary-amber);">KIDS</span></span>
+      </a>
+      <div>
+        <button class="btn btn-secondary" onclick="handleLogout()">Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 2rem 1.5rem;">
+    
+    <!-- Profile & XP Banner -->
+    <div class="card" id="studentProfileHeader" style="margin-bottom: 2rem; background: linear-gradient(135deg, #f59e0b, #ea580c); color:#fff; border:none;">
+      <!-- Diisi oleh game.js -->
+    </div>
+
+    <!-- 1. TAMPILAN JIKA STATUS PENDING -->
+    <div id="pendingView" style="display:none;" class="card">
+      <div style="text-align:center; padding: 2rem 1rem;">
+        <span style="font-size: 4rem;">⏳</span>
+        <h2 style="margin: 1rem 0; color:#b45309;">Akunmu Sedang Menunggu Persetujuan (Pending)</h2>
+        <p style="max-width: 550px; margin: 0 auto; color:#475569;">
+          Pendaftaran akunmu berhasil! Sesuai aturan sistem, akun baru wajib disetujui (Approve) oleh Pak GuruAI sebelum materi pembelajaran dapat dibuka.
+        </p>
+
+        <div style="margin-top:2rem; padding:1.5rem; background:#fffbeb; border:2px dashed #f59e0b; border-radius:16px; display:inline-block;">
+          <p style="font-size:12px; font-weight:800; color:#92400e; margin-bottom:8px;">Uji Coba Cepat (Simulasi Guru):</p>
+          <button class="btn btn-success" onclick="simulateQuickApprove()">✓ Setujui Akun Ini Sekarang</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. TAMPILAN JIKA STATUS AKTIF (KURIKULUM TERBUKA) -->
+    <div id="activeCurriculumView" style="display:none;">
+      <h2 style="margin-bottom:1.5rem;">Peta Level Pembelajaran</h2>
+      <div class="grid-cards">
+        <div class="card">
+          <h3>Level 1: Drag and Drop</h3>
+          <p>Latihan motorik dan menyusun blok perintah visual robot.</p>
+          <button class="btn btn-primary" style="margin-top:1rem;" onclick="downloadDigitalCertificate('Siswa Juara', 1, 'Drag and Drop')">Unduh Sertifikat Level 1 🏅</button>
+        </div>
+        <div class="card">
+          <h3>Level 2: Scrolling</h3>
+          <p>Navigasi menggulir layar untuk melewati labirin data samudra.</p>
+          <button class="btn btn-primary" style="margin-top:1rem;" onclick="downloadDigitalCertificate('Siswa Juara', 2, 'Scrolling Navigasi')">Unduh Sertifikat Level 2 🏅</button>
+        </div>
+        <div class="card">
+          <h3>Level 3: Mengetik</h3>
+          <p>Mengetik sintaks dan kata perintah dengan keyboard visual.</p>
+          <button class="btn btn-primary" style="margin-top:1rem;" onclick="downloadDigitalCertificate('Siswa Juara', 3, 'Mengetik Kode Cilik')">Unduh Sertifikat Level 3 🏅</button>
+        </div>
+        <div class="card">
+          <h3>Level 4: Computational Thinking</h3>
+          <p>Pola logika berulang, sequencing, dan percabangan IF-ELSE.</p>
+          <button class="btn btn-primary" style="margin-top:1rem;" onclick="downloadDigitalCertificate('Siswa Juara', 4, 'Computational Thinking')">Unduh Sertifikat Level 4 🏅</button>
+        </div>
+        <div class="card">
+          <h3>Level 5: Project Sandbox</h3>
+          <p>Ciptakan kreasi animasi panggung pertunjukan robot impianmu!</p>
+          <button class="btn btn-primary" style="margin-top:1rem;" onclick="downloadDigitalCertificate('Siswa Juara', 5, 'Project Sandbox Mandiri')">Unduh Sertifikat Level 5 🏅</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-copyright">
+        @Copyright by. Pak GuruAI
+      </div>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="game.js"></script>
+  <script>
+    checkStudentStatus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - KodingKids</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="logo">
+        <span>👑</span>
+        <span>ADMIN <span style="color:var(--primary-amber);">PORTAL</span></span>
+      </a>
+      <div>
+        <a href="index.html" class="btn btn-secondary" onclick="handleLogout()">Keluar Admin</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 2rem 1.5rem;">
+    <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #4c1d95, #1e1b4b); color:#fff; border:none;">
+      <h1 style="font-size:2rem;">Dashboard Pembina & Admin (Pak GuruAI)</h1>
+      <p style="color:#c4b5fd; font-weight:700;">Kelola pendaftaran siswa, tinjau akun baru, dan berikan persetujuan (Approve).</p>
+    </div>
+
+    <div class="card" style="overflow-x:auto;">
+      <h3 style="margin-bottom:1rem;">Daftar Siswa Terdaftar</h3>
+      <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
+        <thead>
+          <tr style="border-bottom:2px solid #cbd5e1; color:#64748b;">
+            <th style="padding:10px;">Nama Siswa</th>
+            <th style="padding:10px;">Usia</th>
+            <th style="padding:10px;">Status</th>
+            <th style="padding:10px;">Total XP</th>
+            <th style="padding:10px;">Tanggal Daftar</th>
+            <th style="padding:10px; text-align:right;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="studentsList">
+          <!-- Diisi otomatis oleh admin.js -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-copyright">
+        @Copyright by. Pak GuruAI
+      </div>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    if (checkAdminAuth()) {
+      renderAdminStudents();
+    }
+  </script>
+</body>
+</html>

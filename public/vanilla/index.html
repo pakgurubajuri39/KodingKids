@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KodingKids - Petualangan Coding Cilik</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="logo">
+        <span>🤖</span>
+        <span>KODING<span style="color:var(--primary-amber);">KIDS</span></span>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="unplugged.html">Mode Unplugged</a></li>
+          <li><a href="dashboard.html">Dasbor Siswa</a></li>
+          <li><a href="admin.html">Portal Guru</a></li>
+        </ul>
+      </nav>
+      <div>
+        <button class="btn btn-secondary" onclick="openAuthModal('login')">Masuk</button>
+        <button class="btn btn-primary" onclick="openAuthModal('register')">Daftar Sekarang</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section style="padding: 4rem 0; text-align: center;">
+    <div class="container">
+      <span style="background:#fef3c7; color:#b45309; padding: 6px 16px; border-radius: 999px; font-weight:800; font-size:12px;">
+        🌟 Belajar Coding Interaktif Anak #1 di Indonesia
+      </span>
+      <h1 style="font-size: 3rem; margin: 1rem 0; line-height: 1.2;">
+        Mulai Petualangan <br>
+        <span style="color: var(--primary-orange);">Coding-mu!</span> 🚀
+      </h1>
+      <p style="max-width: 650px; margin: 0 auto 2rem; color: #475569; font-size: 1.1rem;">
+        Belajar koding kini semudah dan seasyik bermain game! Mengembangkan logika komputasi, kreativitas, dan rasa percaya diri anak sejak dini.
+      </p>
+      <div>
+        <button class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;" onclick="openAuthModal('register')">
+          Mulai Belajar Sekarang 🎮
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FITUR UNGGULAN: 5 LEVEL & GAMIFIKASI -->
+  <section class="container" style="margin-bottom: 4rem;">
+    <h2 style="text-align:center; font-size: 2.2rem; margin-bottom: 2rem;">5 Level Petualangan Terstruktur</h2>
+    <div class="grid-cards">
+      <div class="card">
+        <h3>Level 1: Drag & Drop</h3>
+        <p>Latihan motorik dan meletakkan blok visual dasar untuk menggerakkan robot.</p>
+      </div>
+      <div class="card">
+        <h3>Level 2: Scrolling</h3>
+        <p>Menjelajah labirin dan menemukan petunjuk dengan navigasi menggulir layar.</p>
+      </div>
+      <div class="card">
+        <h3>Level 3: Mengetik</h3>
+        <p>Mengetik instruksi kode awal menggunakan keyboard visual ceria di layar.</p>
+      </div>
+      <div class="card">
+        <h3>Level 4: Computational Thinking</h3>
+        <p>Teka-teki logika, pengurutan langkah, dan deteksi pola berulang.</p>
+      </div>
+      <div class="card">
+        <h3>Level 5: Project Sandbox</h3>
+        <p>Gabungkan seluruh logika untuk membuat animasi tari dan proyek kreasimu sendiri!</p>
+      </div>
+      <div class="card" style="background:#ecfdf5; border-color:#a7f3d0;">
+        <h3>Mode Unplugged ✂️</h3>
+        <p>Aktivitas koding cetak (Printable) tanpa komputer untuk melatih logika di meja belajar.</p>
+        <a href="unplugged.html" class="btn btn-success" style="margin-top:1rem;">Buka Mode Unplugged</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL LOGIN / REGISTER -->
+  <div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center; padding:1rem;">
+    <div class="card" style="max-width:420px; width:100%; position:relative; background:#fff;">
+      <button onclick="closeAuthModal()" style="position:absolute; right:1rem; top:1rem; border:none; background:none; font-size:1.5rem; cursor:pointer;">✕</button>
+      <h3 id="authModalTitle" style="font-size:1.5rem; margin-bottom:1rem;">Masuk Siswa</h3>
+      
+      <div style="background:#f3e8ff; padding:8px 12px; border-radius:12px; font-size:11px; margin-bottom:1rem; color:#6b21a8;">
+        👑 <b>Info Admin:</b> user: <code>admin</code> | pass: <code>bajuri39</code>
+      </div>
+
+      <form id="authForm" onsubmit="submitAuth(event)">
+        <div id="registerFields" style="display:none;">
+          <label style="font-size:12px; font-weight:800;">Nama Lengkap Siswa</label>
+          <input type="text" id="regName" style="width:100%; padding:8px; margin-bottom:8px; border-radius:8px; border:1px solid #cbd5e1;">
+          
+          <label style="font-size:12px; font-weight:800;">Usia Anak</label>
+          <input type="number" id="regAge" value="8" style="width:100%; padding:8px; margin-bottom:8px; border-radius:8px; border:1px solid #cbd5e1;">
+        </div>
+
+        <label style="font-size:12px; font-weight:800;">Username</label>
+        <input type="text" id="authUsername" required style="width:100%; padding:8px; margin-bottom:8px; border-radius:8px; border:1px solid #cbd5e1;">
+
+        <label style="font-size:12px; font-weight:800;">Kata Sandi</label>
+        <input type="password" id="authPassword" required style="width:100%; padding:8px; margin-bottom:12px; border-radius:8px; border:1px solid #cbd5e1;">
+
+        <button type="submit" class="btn btn-primary" style="width:100%;" id="authSubmitBtn">Masuk 🚀</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER DENGAN SYARAT WAJIB COPYRIGHT PAK GURUAI -->
+  <footer class="footer">
+    <div class="container">
+      <p>Platform Belajar Coding Cilik Interaktif & Ramah Anak</p>
+      <div class="footer-copyright">
+        @Copyright by. Pak GuruAI
+      </div>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>
+    let authMode = 'login';
+    function openAuthModal(mode) {
+      authMode = mode;
+      document.getElementById('authModal').style.display = 'flex';
+      document.getElementById('authModalTitle').innerText = mode === 'login' ? 'Masuk ke KodingKids' : 'Daftar Siswa Baru';
+      document.getElementById('registerFields').style.display = mode === 'register' ? 'block' : 'none';
+      document.getElementById('authSubmitBtn').innerText = mode === 'login' ? 'Masuk 🚀' : 'Daftar & Tunggu Approval 🌟';
+    }
+    function closeAuthModal() {
+      document.getElementById('authModal').style.display = 'none';
+    }
+    function submitAuth(e) {
+      e.preventDefault();
+      const u = document.getElementById('authUsername').value;
+      const p = document.getElementById('authPassword').value;
+
+      if (authMode === 'login') {
+        const res = handleLogin(u, p);
+        if (res.success) {
+          window.location.href = res.redirect;
+        } else {
+          alert(res.message);
+        }
+      } else {
+        const n = document.getElementById('regName').value;
+        const a = document.getElementById('regAge').value;
+        const res = handleRegister(n, u, '', a);
+        if (res.success) {
+          alert(res.message);
+          window.location.href = res.redirect;
+        } else {
+          alert(res.message);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

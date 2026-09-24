@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function: Memeriksa apakah user sudah login
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function: Memeriksa apakah user adalah Admin
+    // Admin dapat ditentukan lewat Custom Claim (request.auth.token.role == 'admin')
+    // atau jika email/username cocok dengan akun admin
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email == 'admin@kodingkids.id' ||
+        request.auth.token.role == 'admin'
+      );
+    }
+    
+    // Helper function: Memeriksa kepemilikan dokumen user
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Koleksi Users (Data Profil Siswa & Admin)
+    match /users/{userId} {
+      // Siapapun yang terautentikasi bisa membaca profilnya sendiri, atau Admin bisa membaca semua siswa
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Siswa baru dapat mendaftar dengan status awal wajib "Pending"
+      allow create: if isAuthenticated() && (
+        isOwner(userId) &&
+        request.resource.data.status == 'Pending' &&
+        request.resource.data.role == 'student'
+      ) || isAdmin();
+      
+      // Siswa hanya boleh memperbarui field tertentu (misal XP & completedStages) jika statusnya sudah "Active"
+      // Admin berhak memperbarui status (Approval: Pending -> Active / Rejected)
+      allow update: if isAdmin() || (
+        isOwner(userId) &&
+        resource.data.status == 'Active' &&
+        request.resource.data.status == resource.data.status && // Siswa tidak boleh mengubah status sendiri
+        request.resource.data.role == resource.data.role       // Siswa tidak boleh mengubah role sendiri
+      );
+      
+      // Hanya Admin yang boleh menghapus data siswa
+      allow delete: if isAdmin();
+    }
+
+    // Koleksi Sertifikat Kelulusan Level Siswa
+    match /certificates/{certId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow create: if isAuthenticated() && (
+        request.resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // Koleksi Kurikulum & Materi Belajar (Read-only untuk siswa aktif, Read-write untuk Admin)
+    match /curriculum/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

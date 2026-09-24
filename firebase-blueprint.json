@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Akun siswa atau administrator platform KodingKids",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "age": { "type": "number" },
+        "avatar": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "admin"] },
+        "status": { "type": "string", "enum": ["Pending", "Active", "Rejected"] },
+        "createdAt": { "type": "string" },
+        "xp": { "type": "number" },
+        "completedStages": { "type": "object" },
+        "certificates": { "type": "array" }
+      },
+      "required": ["id", "name", "username", "role", "status"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Sertifikat digital kelulusan level koding siswa",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "levelNumber": { "type": "number" },
+        "levelTitle": { "type": "string" },
+        "studentName": { "type": "string" },
+        "issueDate": { "type": "string" },
+        "certificateCode": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "levelNumber", "levelTitle", "studentName", "certificateCode"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Data profil siswa, XP, status approval, dan progres level"
+    },
+    "/certificates/{certId}": {
+      "schema": "Certificate",
+      "description": "Koleksi sertifikat kelulusan level resmi yang diraih siswa"
+    }
+  }
+}
