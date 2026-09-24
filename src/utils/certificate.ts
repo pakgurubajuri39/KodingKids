@@ -59,7 +59,7 @@ export function drawCertificateCanvas(canvas: HTMLCanvasElement, data: Certifica
   ctx.fillStyle = '#FFFFFF';
   ctx.font = 'bold 22px Fredoka, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('🌟 KODINGKIDS ACADEMY 🌟', width / 2, 94);
+  ctx.fillText('KODINGKIDS ACADEMY INDONESIA', width / 2, 94);
 
   // Main Title
   ctx.fillStyle = '#1E293B';
@@ -155,7 +155,7 @@ export function drawCertificateCanvas(canvas: HTMLCanvasElement, data: Certifica
   // Center Footer metadata
   ctx.fillStyle = '#94A3B8';
   ctx.font = '14px monospace';
-  ctx.fillText(`ID Sertifikat: ${data.certificateCode} • Diterbitkan: ${data.issueDate}`, width / 2, 730);
+  ctx.fillText(`ID Sertifikat: ${data.certificateCode} | Diterbitkan: ${data.issueDate}`, width / 2, 730);
   ctx.font = '13px Nunito, sans-serif';
   ctx.fillText('@Copyright by. Pak GuruAI', width / 2, 755);
 }

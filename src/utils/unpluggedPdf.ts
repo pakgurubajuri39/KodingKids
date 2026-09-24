@@ -34,7 +34,7 @@ export const UNPLUGGED_ACTIVITIES: UnpluggedItem[] = [
       'Analisis peta grid koordinat (Baris A-F, Kolom 1-6). Tentukan posisi START Robot di [A1] dan FINISH di [F6].',
       'Gunakan pensil warna untuk menggambar rute teraman. Hati-hati jangan menabrak rintangan batu [B3], kolam air [D2], dan lubang hitam [E5]!',
       'Ambil koin bintang bonus yang terletak di koordinat [C4] dan [E3] untuk skor maksimal.',
-      'Tuliskan urutan kode algoritma pada Tabel Perintah di bawah grid (Gunakan simbol panah ↑, ↓, ←, → dan nama aksi).',
+      'Tuliskan urutan kode algoritma pada Tabel Perintah di bawah grid (Gunakan simbol panah: MAJU [^], MUNDUR [v], BELOK KIRI [<], BELOK KANAN [>] dan nama aksi).',
       'Mintalah guru atau orang tua untuk memeriksa ketepatan rute dan membubuhkan tanda tangan.'
     ],
     materials: ['Pensil / Bolpoin', 'Pensil Warna / Crayon (Merah, Hijau, Biru)', 'Penggaris', 'Lembar Kerja A4 ini'],
@@ -96,7 +96,7 @@ export const UNPLUGGED_ACTIVITIES: UnpluggedItem[] = [
       'Rangkai manik-manik pada tali elastis sesuai pola biner yang telah kamu buat. Ikat simpul kuat.',
       'Pecahkan teka-teki kata rahasia yang tertera di bagian bawah lembar kerja!'
     ],
-    materials: ['Tali Benang Elastis / Senar / Wol (± 25 cm)', 'Manik-manik 2 warna berbeda (atau sedotan dipotong kecil)', 'Pensil Warna'],
+    materials: ['Tali Benang Elastis / Senar / Wol (+/- 25 cm)', 'Manik-manik 2 warna berbeda (atau sedotan dipotong kecil)', 'Pensil Warna'],
     rules: [
       'Setiap huruf wajib memiliki tepat 8 digit angka biner (1 Byte).',
       'Urutan angka biner harus dibaca dari kiri ke kanan (Most Significant Bit to Least Significant Bit).'
@@ -206,7 +206,7 @@ function drawPageFooter(doc: jsPDF, pageNum: number, totalPages: number) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(148, 163, 184);
-  doc.text(`KodingKids Academy • Hal ${pageNum}/${totalPages}`, pageWidth - marginX, pageHeight - 6, { align: 'right' });
+  doc.text(`KodingKids Academy | Hal ${pageNum}/${totalPages}`, pageWidth - marginX, pageHeight - 6, { align: 'right' });
 }
 
 /**
@@ -259,7 +259,7 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
   doc.text('NILAI / PARAF', pageWidth - marginX - 19.5, 37.5, { align: 'center' });
   doc.setFontSize(8);
   doc.setTextColor(217, 119, 6);
-  doc.text('⭐⭐⭐⭐⭐', pageWidth - marginX - 19.5, 43.5, { align: 'center' });
+  doc.text('SKOR: _____ / 100', pageWidth - marginX - 19.5, 43.5, { align: 'center' });
 
   // Title Banner
   doc.setFillColor(30, 41, 59);
@@ -273,7 +273,7 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(254, 240, 138);
-  doc.text(`Fokus: ${activity.category}   •   Kelompok Usia: ${activity.ageGroup}   •   Estimasi: ${activity.estimatedTime}`, pageWidth / 2, 65, { align: 'center' });
+  doc.text(`Fokus: ${activity.category}   |   Kelompok Usia: ${activity.ageGroup}   |   Estimasi: ${activity.estimatedTime}`, pageWidth / 2, 65, { align: 'center' });
 
   // Description
   let curY = 74;
@@ -295,10 +295,14 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
   doc.setDrawColor(187, 247, 208);
   doc.roundedRect(marginX, curY, contentWidth, 26, 2, 2, 'FD');
 
+  // Green accent square bullet
+  doc.setFillColor(22, 101, 52);
+  doc.roundedRect(marginX + 4, curY + 3.8, 2.5, 2.5, 0.5, 0.5, 'F');
+
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.setTextColor(22, 101, 52);
-  doc.text('🎯 Capaian Kompetensi Belajar (Learning Objectives):', marginX + 4, curY + 6);
+  doc.text('Capaian Kompetensi Belajar (Learning Objectives):', marginX + 8.5, curY + 6);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
@@ -314,23 +318,30 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
   doc.setDrawColor(226, 232, 240);
   doc.roundedRect(marginX, curY, contentWidth, 14, 2, 2, 'FD');
 
+  // Slate accent square bullet
+  doc.setFillColor(71, 85, 105);
+  doc.roundedRect(marginX + 4, curY + 3.6, 2.5, 2.5, 0.5, 0.5, 'F');
+
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(30, 41, 59);
-  doc.text('✂️ Alat dan Bahan yang Diperlukan:', marginX + 4, curY + 5.5);
+  doc.text('Alat dan Bahan yang Diperlukan:', marginX + 8.5, curY + 5.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(71, 85, 105);
-  doc.text(activity.materials.join('   •   '), marginX + 6, curY + 10.5);
+  doc.text(activity.materials.join('   -   '), marginX + 6, curY + 10.5);
 
   curY += 19;
 
   // Instructions
+  doc.setFillColor(217, 119, 6);
+  doc.roundedRect(marginX, curY - 2.2, 2.5, 2.5, 0.5, 0.5, 'F');
+
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.setTextColor(15, 23, 42);
-  doc.text('📌 Petunjuk Kerja Siswa & Panduan Pendamping:', marginX, curY);
+  doc.text('Petunjuk Kerja Siswa & Panduan Pendamping:', marginX + 4.5, curY);
 
   curY += 5;
   activity.instructions.forEach((inst, idx) => {
@@ -354,10 +365,13 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
   doc.setDrawColor(203, 213, 225);
   doc.roundedRect(marginX, rubY, contentWidth, 48, 2, 2, 'FD');
 
+  doc.setFillColor(79, 70, 229);
+  doc.roundedRect(marginX + 4, rubY + 3.8, 2.5, 2.5, 0.5, 0.5, 'F');
+
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.setTextColor(30, 41, 59);
-  doc.text('📋 RUBRIK PENILAIAN PENDAMPING (GURU / ORANG TUA):', marginX + 4, rubY + 6);
+  doc.text('RUBRIK PENILAIAN PENDAMPING (GURU / ORANG TUA):', marginX + 8.5, rubY + 6);
 
   // Rubric table headers
   doc.setFillColor(241, 245, 249);
@@ -369,13 +383,13 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
   doc.setFontSize(6.5);
   doc.setTextColor(51, 65, 85);
   doc.text('Aspek yang Dinilai', marginX + 6, rubY + 12);
-  doc.text('Skala Bintang (1 - 5)', marginX + 70, rubY + 12);
+  doc.text('Skala Nilai (1 - 5)', marginX + 70, rubY + 12);
   doc.text('Catatan Observasi Karakter', marginX + 115, rubY + 12);
 
   const criteria = [
-    { title: '1. Pemahaman Algoritma & Urutan Langkah', stars: '[ ⭐ ⭐ ⭐ ⭐ ⭐ ]' },
-    { title: '2. Ketelitian, Analisis & Kerapian Kerja', stars: '[ ⭐ ⭐ ⭐ ⭐ ⭐ ]' },
-    { title: '3. Kemandirian, Pantang Menyerah & Rasa Ingin Tahu', stars: '[ ⭐ ⭐ ⭐ ⭐ ⭐ ]' },
+    { title: '1. Pemahaman Algoritma & Urutan Langkah', stars: '[ 1 ]   [ 2 ]   [ 3 ]   [ 4 ]   [ 5 ]' },
+    { title: '2. Ketelitian, Analisis & Kerapian Kerja', stars: '[ 1 ]   [ 2 ]   [ 3 ]   [ 4 ]   [ 5 ]' },
+    { title: '3. Kemandirian, Pantang Menyerah & Rasa Ingin Tahu', stars: '[ 1 ]   [ 2 ]   [ 3 ]   [ 4 ]   [ 5 ]' },
   ];
 
   criteria.forEach((crit, ci) => {
@@ -459,8 +473,8 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
           doc.setFontSize(7.5);
           doc.setTextColor(21, 128, 61);
           doc.text('START', cx + cellSize / 2, cy + 5.5, { align: 'center' });
-          doc.setFontSize(7);
-          doc.text('🤖 ROBOT', cx + cellSize / 2, cy + 10, { align: 'center' });
+          doc.setFontSize(6.5);
+          doc.text('[ ROBOT ]', cx + cellSize / 2, cy + 9.5, { align: 'center' });
         }
         // FINISH (F6: r5, c5)
         else if (r === 5 && c === 5) {
@@ -470,8 +484,8 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
           doc.setFontSize(7.5);
           doc.setTextColor(180, 83, 9);
           doc.text('FINISH', cx + cellSize / 2, cy + 5.5, { align: 'center' });
-          doc.setFontSize(7);
-          doc.text('⚡ ENERGI', cx + cellSize / 2, cy + 10, { align: 'center' });
+          doc.setFontSize(6.5);
+          doc.text('[ ENERGI ]', cx + cellSize / 2, cy + 9.5, { align: 'center' });
         }
         // Obstacle 1: Batu di B3 (r1, c2)
         else if (r === 1 && c === 2) {
@@ -480,7 +494,9 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(7);
           doc.setTextColor(71, 85, 105);
-          doc.text('🪨 BATU', cx + cellSize / 2, cy + 8, { align: 'center' });
+          doc.text('BATU', cx + cellSize / 2, cy + 6, { align: 'center' });
+          doc.setFontSize(5.5);
+          doc.text('[ Rintangan ]', cx + cellSize / 2, cy + 10, { align: 'center' });
         }
         // Obstacle 2: Air di D2 (r3, c1)
         else if (r === 3 && c === 1) {
@@ -489,7 +505,9 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(7);
           doc.setTextColor(3, 105, 161);
-          doc.text('💧 AIR', cx + cellSize / 2, cy + 8, { align: 'center' });
+          doc.text('KOLAM AIR', cx + cellSize / 2, cy + 6, { align: 'center' });
+          doc.setFontSize(5.5);
+          doc.text('[ Rintangan ]', cx + cellSize / 2, cy + 10, { align: 'center' });
         }
         // Obstacle 3: Lubang di E5 (r4, c4)
         else if (r === 4 && c === 4) {
@@ -498,25 +516,31 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(7);
           doc.setTextColor(15, 23, 42);
-          doc.text('🕳️ LUBANG', cx + cellSize / 2, cy + 8, { align: 'center' });
+          doc.text('LUBANG', cx + cellSize / 2, cy + 6, { align: 'center' });
+          doc.setFontSize(5.5);
+          doc.text('[ Bahaya ]', cx + cellSize / 2, cy + 10, { align: 'center' });
         }
         // Bonus Star 1: C4 (r2, c3)
         else if (r === 2 && c === 3) {
           doc.setFillColor(254, 249, 195);
           doc.rect(cx, cy, cellSize, cellSize, 'FD');
           doc.setFont('helvetica', 'bold');
-          doc.setFontSize(7.5);
+          doc.setFontSize(7);
           doc.setTextColor(202, 138, 4);
-          doc.text('⭐ KOIN 1', cx + cellSize / 2, cy + 8, { align: 'center' });
+          doc.text('KOIN EMAS 1', cx + cellSize / 2, cy + 6, { align: 'center' });
+          doc.setFontSize(5.5);
+          doc.text('[ +10 Poin ]', cx + cellSize / 2, cy + 10, { align: 'center' });
         }
         // Bonus Star 2: E3 (r4, c2)
         else if (r === 4 && c === 2) {
           doc.setFillColor(254, 249, 195);
           doc.rect(cx, cy, cellSize, cellSize, 'FD');
           doc.setFont('helvetica', 'bold');
-          doc.setFontSize(7.5);
+          doc.setFontSize(7);
           doc.setTextColor(202, 138, 4);
-          doc.text('⭐ KOIN 2', cx + cellSize / 2, cy + 8, { align: 'center' });
+          doc.text('KOIN EMAS 2', cx + cellSize / 2, cy + 6, { align: 'center' });
+          doc.setFontSize(5.5);
+          doc.text('[ +10 Poin ]', cx + cellSize / 2, cy + 10, { align: 'center' });
         } else {
           doc.rect(cx, cy, cellSize, cellSize);
         }
@@ -568,10 +592,13 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
     doc.setDrawColor(203, 213, 225);
     doc.roundedRect(marginX, qY, contentWidth, 52, 2, 2, 'FD');
 
+    doc.setFillColor(217, 119, 6);
+    doc.roundedRect(marginX + 4, qY + 4.2, 2.5, 2.5, 0.5, 0.5, 'F');
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(30, 41, 59);
-    doc.text('💡 TANTANGAN REFLEKSI & ANALISIS ALGORITMA:', marginX + 4, qY + 6.5);
+    doc.text('TANTANGAN REFLEKSI & ANALISIS ALGORITMA:', marginX + 8.5, qY + 6.5);
 
     const questions = [
       '1. Berapa total langkah paling sedikit yang kamu temukan untuk sampai ke FINISH? Jawab: _____ Langkah.',
@@ -602,18 +629,18 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
     p2Y += 12;
 
     const cardLabels = [
-      { t: 'PROGRAMMER CILIK', sub: 'Peran: Pemberi Kode', icon: '🧑‍💻' },
-      { t: 'ROBOT PINTAR', sub: 'Peran: Pelaksana Aksi', icon: '🤖' },
-      { t: '↑ MAJU 1 LANGKAH', sub: 'Gerak lurus ke depan', icon: '⬆️' },
-      { t: '↑ MAJU 1 LANGKAH', sub: 'Gerak lurus ke depan', icon: '⬆️' },
-      { t: '↓ MUNDUR 1 LANGKAH', sub: 'Mundur 1 kotak', icon: '⬇️' },
-      { t: '↶ BELOK KIRI 90°', sub: 'Putar badan ke kiri', icon: '↺' },
-      { t: '↷ BELOK KANAN 90°', sub: 'Putar badan ke kanan', icon: '↻' },
-      { t: '⚡ LOMPAT TINGGI', sub: 'Hindari rintangan', icon: '🦘' },
-      { t: '★ AMBIL BINTANG', sub: 'Koleksi poin emas', icon: '⭐' },
-      { t: '🔄 ULANGI 2 KALI', sub: 'Looping aksi terakhir', icon: '🔁' },
-      { t: '🛑 STOP & SELESAI', sub: 'Program berakhir aman', icon: '⏹' },
-      { t: '🎉 SELEBRASI MENANG', sub: 'Tepuk tangan gembira', icon: '🎊' }
+      { t: 'PROGRAMMER CILIK', sub: 'Peran: Pemberi Kode' },
+      { t: 'ROBOT PINTAR', sub: 'Peran: Pelaksana Aksi' },
+      { t: '[ MAJU 1 LANGKAH ]', sub: 'Gerak lurus ke depan' },
+      { t: '[ MAJU 1 LANGKAH ]', sub: 'Gerak lurus ke depan' },
+      { t: '[ MUNDUR 1 LANGKAH ]', sub: 'Mundur 1 kotak' },
+      { t: '[ BELOK KIRI 90 DEG ]', sub: 'Putar badan ke kiri' },
+      { t: '[ BELOK KANAN 90 DEG ]', sub: 'Putar badan ke kanan' },
+      { t: '[ LOMPAT TINGGI ]', sub: 'Hindari rintangan' },
+      { t: '[ AMBIL BINTANG ]', sub: 'Koleksi poin emas' },
+      { t: '[ ULANGI 2 KALI ]', sub: 'Looping aksi terakhir' },
+      { t: '[ STOP & SELESAI ]', sub: 'Program berakhir aman' },
+      { t: '[ SELEBRASI MENANG ]', sub: 'Tepuk tangan gembira' }
     ];
 
     const cardW = 42;
@@ -632,7 +659,7 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(6.5);
       doc.setTextColor(148, 163, 184);
-      doc.text('✂ gunting', cx + 3, cy + 4);
+      doc.text('-- Gunting Di Sini --', cx + cardW / 2, cy + 4.5, { align: 'center' });
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7.5);
@@ -652,10 +679,13 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
     doc.setDrawColor(203, 213, 225);
     doc.roundedRect(marginX, pasteY, contentWidth, 80, 2, 2, 'FD');
 
+    doc.setFillColor(79, 70, 229);
+    doc.roundedRect(marginX + 4, pasteY + 4.2, 2.5, 2.5, 0.5, 0.5, 'F');
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(30, 41, 59);
-    doc.text('📌 PAPAN TEMPEL ALUR PROGRAM ROBOT (Tempelkan kartu hasil guntingan di bawah):', marginX + 4, pasteY + 6.5);
+    doc.text('PAPAN TEMPEL ALUR PROGRAM ROBOT (Tempelkan kartu hasil guntingan di bawah):', marginX + 8.5, pasteY + 6.5);
 
     const slotW = 27.5;
     const slotH = 26;
@@ -771,10 +801,13 @@ export function generateUnpluggedPdf(activity: UnpluggedItem) {
     doc.setDrawColor(251, 191, 36);
     doc.roundedRect(marginX, p2Y, contentWidth, 32, 2, 2, 'FD');
 
+    doc.setFillColor(180, 83, 9);
+    doc.roundedRect(marginX + 4, p2Y + 4.2, 2.5, 2.5, 0.5, 0.5, 'F');
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.setTextColor(180, 83, 9);
-    doc.text('🕵️ TANTANGAN DEKRIPSI PESAN RAHASIA KOMPUTER:', marginX + 4, p2Y + 6.5);
+    doc.text('TANTANGAN DEKRIPSI PESAN RAHASIA KOMPUTER:', marginX + 8.5, p2Y + 6.5);
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7.5);
